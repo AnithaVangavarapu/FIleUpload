@@ -1,0 +1,7 @@
+#igone node_modules
+frontend/node_modules/
+backedn/node_modules/
+
+#ignore .env file
+frontend/.env
+backedn/.env
