@@ -1,5 +1,12 @@
-import React, { useCallback, useRef, useState, type ChangeEvent } from "react";
-import { Upload } from "lucide-react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
+import { Upload, X } from "lucide-react";
+import { cn } from "../../../utils/cn";
 interface FileUploadProps {
   label?: string;
   accept?: string;
@@ -15,14 +22,21 @@ const FileUpload: React.FC<FileUploadProps> = ({
   accept = "images/*",
   onChange,
 }) => {
+  const [file, setFile] = useState<File | null>(null);
   const ref = useRef<HTMLInputElement | null>(null);
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      onChange(e.target.files[0]);
-    } else {
-      onChange(null);
-    }
-  }, []);
+
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length > 0) {
+        onChange(e.target.files[0]);
+        setFile(e.target.files[0]);
+      } else {
+        onChange(null);
+        setFile(null);
+      }
+    },
+    [onChange, file]
+  );
 
   return (
     <div className="flex flex-col w-full gap-2">
@@ -36,12 +50,27 @@ const FileUpload: React.FC<FileUploadProps> = ({
       />
       {label && <label>{label}</label>}
 
-      <div
-        onClick={() => ref.current?.click()}
-        className="border flex justify-center p-2 rounded-lg"
-      >
-        <Upload size={20} />
-      </div>
+      {file ? (
+        <div className="flex justify-between border p-2 rounded-lg">
+          <p>{file.name}</p>
+          <X
+            onClick={() => {
+              setFile(null);
+              onChange(null);
+              if (ref.current) {
+                ref.current.value = "";
+              }
+            }}
+          />
+        </div>
+      ) : (
+        <div
+          onClick={() => ref.current?.click()}
+          className={cn("border p-2 rounded-lg flex justify-center")}
+        >
+          <Upload size={20} />
+        </div>
+      )}
 
       {error && <p className="text-red-500">{error}</p>}
     </div>

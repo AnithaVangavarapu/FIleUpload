@@ -8,11 +8,12 @@ const Form = () => {
     useFileUploadForm();
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="flex flex-col w-[50%] gap-2 border p-2">
+      <div className="flex flex-col w-[50%] gap-4 p-2">
         <Controller
           name="inputFile"
           control={control}
           rules={{
+            required: "Select file before submitting",
             validate: (val) =>
               val.size < 10 * 1024 * 1024 || "Max file size 10MB",
           }}
@@ -20,7 +21,7 @@ const Form = () => {
             <FileUpload
               name={field.name}
               onChange={field.onChange}
-              label="Browse"
+              label="Upload File :"
               error={errors.inputFile?.message as string}
             />
           )}
@@ -29,7 +30,7 @@ const Form = () => {
           onClick={handleSubmit(onSubmit)}
           type="submit"
           className={cn(
-            "cursor-pointer border px-1",
+            "cursor-pointer border p-1 rounded-lg",
             status === "uploading" && "pointer-events-none"
           )}
         >
