@@ -5,6 +5,15 @@ import { ValidationError } from "joi";
 import path from "path";
 import fs from "fs";
 
+interface GetFile {
+  limit?: number;
+  offset?: number;
+}
+
+export interface CustomFileRequest extends Request {
+  getFileQueryValidation?: GetFile;
+}
+
 //Joi schemas
 const uploadSchema = Joi.object({
   file: Joi.object({
@@ -20,8 +29,13 @@ const uploadSchema = Joi.object({
   }).unknown(true),
 });
 
+const getSchema = Joi.object({
+  limit: Joi.number().integer().min(1).optional(),
+  offset: Joi.number().integer().min(0).optional(),
+}).unknown(false);
+
 export const fileValidation = async (
-  req: Request,
+  req: CustomFileRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -31,6 +45,11 @@ export const fileValidation = async (
         { file: req.file },
         { abortEarly: false }
       );
+    } else if (req.method === "GET") {
+      const value = await getSchema.validateAsync(req.query, {
+        abortEarly: false,
+      });
+      req.getFileQueryValidation = value;
     }
     next();
   } catch (err) {

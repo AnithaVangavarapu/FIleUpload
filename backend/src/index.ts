@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import pool from "./config/db";
 import file from "./routes/file.route";
 import cors from "cors";
+import path from "path";
 
 const app = express();
 app.use(
@@ -14,7 +15,7 @@ app.use(
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
-
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/file", file);
 
 //Connect to DB then start the server
