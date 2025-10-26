@@ -4,7 +4,7 @@ import { FileList } from "./components/pages/FileList";
 
 function App() {
   return (
-    <div className="m-5 flex justify-center flex-col">
+    <div className="m-5 flex justify-center flex-col gap-2">
       <FileUploadForm />
       <FileList />
       <ToastContainer />

@@ -5,11 +5,13 @@ const FileList = () => {
   const { files, columns, handleDownload } = useFileList();
 
   return (
-    <table className="border">
+    <table className="border border-gray-400">
       <thead>
         <tr>
           {columns.map((c) => (
-            <th key={c.key}>{c.label}</th>
+            <th key={c.key} className="text-gray-600">
+              {c.label}
+            </th>
           ))}
         </tr>
       </thead>
@@ -22,7 +24,11 @@ const FileList = () => {
               </td>
             ))}
             <td>
-              <Download onClick={() => handleDownload(f.id, f.file_name)} />
+              <Download
+                onClick={() => handleDownload(f.id, f.file_name)}
+                color="gray"
+                className="cursor-pointer"
+              />
             </td>
           </tr>
         ))}

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type ChangeEvent,
-} from "react";
+import React, { useCallback, useRef, useState, type ChangeEvent } from "react";
 import { Upload, X } from "lucide-react";
 import { cn } from "../../../utils/cn";
 interface FileUploadProps {
@@ -39,7 +33,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   );
 
   return (
-    <div className="flex flex-col w-full gap-2">
+    <div className="flex flex-col w-100 gap-2 ">
       <input
         name={name}
         type="file"
@@ -48,10 +42,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
         onChange={handleChange}
         className="hidden"
       />
-      {label && <label>{label}</label>}
+      {label && <label className="font-medium">{label}</label>}
 
       {file ? (
-        <div className="flex justify-between border p-2 rounded-lg">
+        <div className="flex justify-between border p-2 rounded-lg border-gray-400">
           <p>{file.name}</p>
           <X
             onClick={() => {
@@ -66,9 +60,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
       ) : (
         <div
           onClick={() => ref.current?.click()}
-          className={cn("border p-2 rounded-lg flex justify-center")}
+          className={cn(
+            "border-dotted border p-2 rounded-lg flex justify-center border-gray-400"
+          )}
         >
-          <Upload size={20} />
+          <Upload size={20} color="gray" />
         </div>
       )}
 
