@@ -1,5 +1,9 @@
 import { Response } from "express";
-import { fileUpload, getFiles } from "../services/file.service";
+import {
+  fileUpload,
+  getFiles,
+  getFileDownload,
+} from "../services/file.service";
 import path from "path";
 import fs from "fs";
 import { CustomFileRequest } from "../middlewares/fileValidation.middleware";
@@ -49,4 +53,27 @@ export const getFilesController = async (
     });
   }
   return res.status(200).json(result.data);
+};
+
+export const getFileDownloadController = async (
+  req: CustomFileRequest,
+  res: Response
+) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) return res.status(400).json({ message: "Invalid file id" });
+  const result = await getFileDownload(id);
+
+  if (!result.success) {
+    return res.status(404).json({ message: result.message });
+  }
+
+  const fullPath = path.join(process.cwd(), result.data?.file_path);
+
+  res.download(fullPath, result.data?.file_name, (err) => {
+    if (err) {
+      console.error("Error during file download:", err);
+      if (!res.headersSent)
+        res.status(500).json({ message: "Error downloading file" });
+    }
+  });
 };

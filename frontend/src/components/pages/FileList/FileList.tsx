@@ -2,7 +2,7 @@ import { useFileList } from "./useFIleList";
 import { Download } from "lucide-react";
 
 const FileList = () => {
-  const { files, columns } = useFileList();
+  const { files, columns, handleDownload } = useFileList();
 
   return (
     <table className="border">
@@ -22,9 +22,7 @@ const FileList = () => {
               </td>
             ))}
             <td>
-              <a href={f.file_url} download={f.file_name}>
-                <Download />
-              </a>
+              <Download onClick={() => handleDownload(f.id, f.file_name)} />
             </td>
           </tr>
         ))}

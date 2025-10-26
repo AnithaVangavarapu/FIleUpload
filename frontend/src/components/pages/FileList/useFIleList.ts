@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 
 interface FileProp {
   id: number;
-  file_url: string;
   file_name: string;
   file_type: string;
   date_time: string;
@@ -44,5 +43,22 @@ export const useFileList = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  return { files, columns };
+
+  const handleDownload = async (id: number, fileName: string) => {
+    const response = await fetch(
+      `http://localhost:5000/api/file/download/${id}`
+    );
+    if (!response.ok) throw new Error("Download failed");
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
+  return { files, columns, handleDownload };
 };
